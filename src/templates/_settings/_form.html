@@ -1,0 +1,445 @@
+{##
+ # Intercom Messenger plugin for Craft CMS 3.x
+ #
+ # Intercom.com: the Business Messenger you and your customers will love.
+ # Sure, it does live chat. But there’s also bots, apps, product tours, and more
+ # like email, messages, and a help center that help you build relationships with your customers.
+ # For more information visit: https://www.intercom.com/
+ #
+ # @link      https://github.com/jimstrike
+ # @copyright Copyright (c) Dhimiter Karalliu
+ #}
+{% import "_includes/forms" as forms %}
+
+{% set settings = plugin.settings %}
+
+{# ********************************************************************** #}
+
+{{ actionInput("#{plugin.handle}/settings/save") }}
+{{ redirectInput("#{plugin.handle}/settings?site=" ~ site.handle) }}
+{#{ csrfInput() }#} {# already included by Craft #}
+{{ hiddenInput('siteId', site.id) }}
+
+{# ------------------------------- #}
+
+{{ forms.textField({
+    first: true,
+    label: 'settings.app_id.label'|tt,
+    instructions: 'settings.app_id.instructions'|tt({ 
+        'intercom.help.find_app_id': '<a href="'~ plugin.help.find_app_id ~'" class="go" rel="noopener" target="_blank">'~ 'intercom.help.find_app_id'|tt ~'</a>' 
+    })|raw,
+    name: 'settings[appId]',
+    value: settings.getAppId(site.id),
+    required: false,
+    warning: _self.configWarning('appId', plugin.handle, site.id)|trim,
+    errors: settings.getAppId(site.id) is empty ? ['settings.app_id.errors.blank'|tt] : null
+}) }}
+
+<a href="{{ url("#{plugin.handle}/preview", {'site': site.handle}) }}" class="btn" rel="noopener" target="_blank">{{ 'global.preview'|tt }} <span class="go"></span></a>
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.lightswitchField({
+    label: 'settings.enabled.label'|tt({'plugin': plugin.name}) ~ '?',
+    instructions: 'settings.enabled.instructions'|tt,
+    name: 'settings[enabled]',
+    value: 1,
+    required: false,
+    warning: _self.configWarning('enabled', plugin.handle, site.id)|trim,
+    on: settings.getEnabled(site.id)
+}) }}
+
+<hr class="divider">
+
+{# ------------------------------- #}
+
+<div class="field">
+    <div class="heading">
+        <label>{{ 'settings.setup_logged_in_user.label'|tt  ~ '?' }}</label>
+    </div>
+
+    <div class="instructions">
+        <p>
+            {{ 'settings.setup_logged_in_user.instructions'|tt }}
+        </p>
+    </div>
+
+    {% if CraftEdition == CraftPro %} 
+        {{ _self.table_user_fields(site, settings) }}
+
+        <div class="pane">
+            <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+            <div class="light" style="display: inline;">
+                {{ 'settings.setup_logged_in_user.footnote'|tt({
+                    'user_hash': 'settings.setup_logged_in_user.user_hash.label'|tt,
+                    'user_id': 'settings.setup_logged_in_user.user_id.label'|tt,
+                    'email': 'settings.setup_logged_in_user.email.label'|tt,
+                    'enable_identity_verification': '<a href="'~ plugin.help.identity_verification ~'" class="go" rel="noopener" target="_blank">'~ 'intercom.help.enable_identity_verification'|tt ~'</a>'
+                })|raw }}
+            </div>
+        </div>
+        
+        {% set warning = _self.configWarning('setupLoggedInUser', plugin.handle, site.id)|trim %}
+        {% if warning %}<p class="warning">{{ warning }}</p>{% endif %}
+    {% else %}
+        <div class="warning with-icon">
+            {{ 'global.craftpro.footnote'|tt }}
+        </div>
+    {% endif %}
+</div>
+
+<hr>
+
+{# ------------------------------- #}
+
+{% set identity_secret_instructions = 'settings.identity_secret.instructions'|tt({ 
+    'user_hash': 'settings.setup_logged_in_user.user_hash.label'|tt,
+    'user_id': 'settings.setup_logged_in_user.user_id.label'|tt,
+    'email': 'settings.setup_logged_in_user.email.label'|tt,
+    'setup_logged_in_user': 'settings.setup_logged_in_user.label'|tt|replace({'?': ''}),
+    'enable_identity_verification': '<a href="'~ plugin.help.identity_verification ~'" class="go" rel="noopener" target="_blank">'~ 'intercom.help.enable_identity_verification'|tt ~'</a>'
+}) %}
+
+{% if CraftEdition == CraftPro %}
+    {{ forms.textField({
+        label: 'settings.identity_secret.label'|tt,
+        instructions: identity_secret_instructions|raw,
+        name: 'settings[identitySecret]',
+        value: settings.getIdentitySecret(site.id)|intercom_messenger_mask,
+        placeholder: 'settings.identity_secret.placeholder'|tt,
+        required: false,
+        warning: _self.configWarning('identitySecret', plugin.handle, site.id)|trim,
+        class: 'code',
+    }) }}
+
+    {% if settings.getIdentitySecret(site.id) is not empty %}
+        <div class="pane">
+            <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+            <div class="light" style="display: inline;">
+                {{ 'settings.identity_secret.footnote'|tt({
+                    'user_id': '<a href="'~ url("#{plugin.handle}/settings/user-hash-check", { 'siteId': site.id, 'data': currentUser.id }) ~'" class="go" rel="noopener" target="_blank">'~ 'settings.setup_logged_in_user.user_id.label'|tt ~'</a>',
+                    'email': '<a href="'~ url("#{plugin.handle}/settings/user-hash-check", { 'siteId': site.id, 'data': currentUser.email }) ~'" class="go" rel="noopener" target="_blank">'~ 'settings.setup_logged_in_user.email.label'|tt ~'</a>'
+                })|raw }}
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="field">
+        <div class="heading">
+            <label>{{ 'settings.identity_secret.label'|tt }}</label>
+        </div>
+
+        <div class="instructions">
+            <p>
+                {{ identity_secret_instructions|raw }}
+            </p>
+        </div>
+
+        <div class="warning with-icon">
+            {{ 'global.craftpro.footnote'|tt }}
+        </div>
+    </div>
+{% endif %}
+
+<hr>
+
+{# ------------------------------- #}
+
+<div class="field">
+    <div class="heading">
+        <label>{{ 'settings.setup_user_groups.label'|tt }}</label>
+    </div>
+
+    <div class="instructions">
+        <p>
+            {{ 'settings.setup_user_groups.instructions'|tt }}
+        </p>
+    </div>
+
+    {% if CraftEdition == CraftPro %}
+        {{ _self.table_user_groups(site, settings) }}
+        
+        {% set warning = _self.configWarning('setupUserGroups', plugin.handle, site.id)|trim %}
+        {% if warning %}<p class="warning">{{ warning }}</p>{% endif %}
+    {% else %}
+        <div class="warning with-icon">
+            {{ 'global.craftpro.footnote'|tt }}
+        </div>
+    {% endif %}
+</div>
+
+<hr class="divider">
+
+{# ------------------------------- #}
+
+<div class="field">
+    <div class="heading">
+        <label>{{ 'settings.sections.label'|tt }}</label>
+    </div>
+
+    <div class="instructions">
+        <p>
+            {{ 'settings.sections.instructions'|tt }}
+        </p>
+    </div>
+
+    {{ _self.table_sections(site, settings) }}
+    
+    {% set warning = _self.configWarning('sections', plugin.handle, site.id)|trim %}
+    {% if warning %}<p class="warning with-icon">{{ warning }}</p>{% endif %}
+</div>
+
+<hr>
+
+{# ------------------------------- #}
+
+<div class="field">
+    <div class="heading">
+        <label>{{ 'settings.url_paths.label'|tt }}</label>
+    </div>
+
+    <div class="instructions">
+        <p>
+            {{ 'settings.url_paths.instructions'|tt({
+                'plugin': plugin.name, 
+                'sections': 'settings.sections.label'|tt}) 
+            }}
+        </p>
+    </div>
+
+    {{ forms.editableTable({
+        name: 'settings[urlPaths]',
+        required: false,
+        warning: _self.configWarning('urlPaths', plugin.handle, site.id)|trim,
+        id: 'editabletable-settings-url-paths',
+        cols: [
+            {
+                type: 'url',
+                heading: 'settings.url_paths.cols.url.label'|tt,
+                info: 'settings.url_paths.cols.url.info'|tt,
+            },
+            {
+                type: 'lightswitch',
+                heading: 'settings.url_paths.cols.active.label'|tt,
+                info: 'settings.url_paths.cols.active.info'|tt,
+                width: 30,
+            }
+        ],
+        rows: settings.getUrlPaths(site.id) ?? []
+    }) }}
+
+    {% set warning = _self.configWarning('urlPaths', plugin.handle, site.id)|trim %}
+    {% if warning %}<p class="warning with-icon">{{ warning }}</p>{% endif %}
+
+</div>
+
+<hr class="divider">
+
+{# ------------------------------- #}
+
+{{ forms.selectField({
+    label: 'settings.alignment.label'|tt,
+    instructions: 'settings.alignment.instructions'|tt,
+    name: 'settings[alignment]',
+    value: settings.getAlignment(site.id),
+    options: settings.alignmentOptions(),
+    required: false,
+    warning: _self.configWarning('alignment', plugin.handle, site.id)|trim,
+}) }}
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.textField({
+    label: 'settings.horizontal_padding.label'|tt,
+    instructions: 'settings.horizontal_padding.instructions'|tt,
+    name: 'settings[horizontalPadding]',
+    value: settings.getHorizontalPadding(site.id),
+    required: false,
+    maxlength: 3,
+    size: 10,
+    warning: _self.configWarning('horizontalPadding', plugin.handle, site.id)|trim,
+}) }}
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.textField({
+    label: 'settings.vertical_padding.label'|tt,
+    instructions: 'settings.vertical_padding.instructions'|tt,
+    name: 'settings[verticalPadding]',
+    value: settings.getVerticalPadding(site.id),
+    required: false,
+    maxlength: 3,
+    size: 10,
+    verticalPadding: _self.configWarning('verticalPadding', plugin.handle, site.id)|trim,
+}) }}
+
+<hr class="divider">
+
+{# ------------------------------- #}
+
+{{ forms.lightswitchField({
+    label: 'settings.show_default_launcher_scroll_bottom_page_only.label'|tt  ~ '?',
+    instructions: 'settings.show_default_launcher_scroll_bottom_page_only.instructions'|tt({
+        'hide_default_launcher': 'settings.hide_default_launcher.label'|tt
+    }),
+    name: 'settings[showDefaultLauncherScrollBottomPageOnly]',
+    value: 1,
+    required: false,
+    warning: _self.configWarning('showDefaultLauncherScrollBottomPageOnly', plugin.handle, site.id)|trim,
+    on: settings.getShowDefaultLauncherScrollBottomPageOnly(site.id)
+}) }}
+
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.show_default_launcher_scroll_bottom_page_only.footnote'|tt }}
+    </div>
+</div>
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.lightswitchField({
+    label: 'settings.enable_custom_launcher.label'|tt  ~ '?',
+    instructions: 'settings.enable_custom_launcher.instructions'|tt({
+        'custom_launcher_selector': '<code class="warning">'~ intercom_messenger_custom_launcher_selector() ~'</code>',
+    })|raw,
+    name: 'settings[enableCustomLauncher]',
+    value: 1,
+    required: false,
+    warning: _self.configWarning('enableCustomLauncher', plugin.handle, site.id)|trim,
+    on: settings.getEnableCustomLauncher(site.id)
+}) }}
+
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.examples'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.enable_custom_launcher.footnote'|tt({
+            'documentation_url': '<a href="'~ (craft[plugin.handle].composer.extra.documentationUrl ?? '#') ~'#custom-launcher" class="go" rel="noopener" target="_blank">'~ 'global.readme'|tt|upper ~'</a>'
+        })|raw }}
+    </div>
+</div>
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.lightswitchField({
+    label: 'settings.hide_default_launcher.label'|tt  ~ '?',
+    instructions: 'settings.hide_default_launcher.instructions'|tt,
+    name: 'settings[hideDefaultLauncher]',
+    value: 1,
+    required: false,
+    warning: _self.configWarning('hideDefaultLauncher', plugin.handle, site.id)|trim,
+    on: settings.getHideDefaultLauncher(site.id)
+}) }}
+
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.hide_default_launcher.footnote'|tt }}
+    </div>
+</div>
+
+<hr>
+
+{# ------------------------------- #}
+
+<a href="{{ url("#{plugin.handle}/preview", {'site': site.handle}) }}" class="btn" rel="noopener" target="_blank">{{ 'global.preview'|tt }} <span class="go"></span></a>
+
+{# ------------------------------- #}
+{# MACROS                          #}
+{# ------------------------------- #}
+
+{% macro table_user_fields(site, settings) %}
+    <table class="data fullwidth fixed-layout">
+        <tbody>
+            {% for field, name in settings.setupLoggedInUserFieldMap() %}
+                <tr>
+                    <th>{{ name }}</th>
+                    <td style="text-align: right;">
+                        {{ forms.lightswitchField({
+                            label: '',
+                            instructions: '',
+                            name: "settings[setupLoggedInUser][#{field}]",
+                            value: 1,
+                            required: false,
+                            on: settings.getSetupLoggedInUser(site.id)[field] ?? false
+                        }) }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{# ------------------------------- #}
+
+{% macro table_user_groups(site, settings) %}
+    {% set groups = craft.app.userGroups.getAllGroups() %}
+    
+    <table class="data fullwidth fixed-layout">
+        <tbody>
+            {% for group in groups %}
+                <tr>
+                    <th>{{ group.name }}</th>
+                    <td style="text-align: right;">
+                        {{ forms.lightswitchField({
+                            label: '',
+                            instructions: '',
+                            name: "settings[setupUserGroups][#{group.id}]",
+                            value: 1,
+                            required: false,
+                            on: settings.getSetupUserGroups(site.id)[group.id] ?? false
+                        }) }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{# ------------------------------- #}
+
+{% macro table_sections(site, settings) %}
+    <table class="data fullwidth fixed-layout">
+        <tbody>
+            {% for section in craft.app.sections.allSections %}
+                <tr>
+                    <th>{{ section.name }}</th>
+                    <td style="text-align: right;">
+                        {{ forms.lightswitchField({
+                            label: '',
+                            instructions: '',
+                            name: "settings[sections][#{section.id}]",
+                            value: 1,
+                            required: false,
+                            on: settings.getSections(site.id)[section.id] ?? false
+                        }) }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}
+
+{# ------------------------------- #}
+
+{% macro configWarning(setting, plugin_handle, siteId = null) -%}
+    {%- set config = craft.app.config.getConfigFromFile(plugin_handle) -%}
+    {%- if config[siteId][setting] is defined or config[setting] is defined -%}
+        {{- 'settings.config.warning'|tt({
+            'setting': setting,
+            'file': "config/#{plugin_handle}.php"
+        })|raw }}
+    {%- else -%}
+        {{ false }}
+    {%- endif -%}
+{%- endmacro %}

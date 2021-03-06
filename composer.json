@@ -1,0 +1,50 @@
+{
+    "name": "jimstrike/craft-intercom-messenger",
+    "description": "Intercom Messenger",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "intercom",
+        "messenger",
+        "customer",
+        "chat",
+        "intercom-messenger",
+        "customer-chat",
+        "customer-care",
+        "chat-bot",
+        "yii2"
+    ],
+    "support": {
+        "email": "jimstrike+intercom+messenger@gmail.com",
+        "docs": "https://github.com/jimstrike/craft-intercom-messenger/blob/main/README.md",
+        "source": "https://github.com/jimstrike/craft-intercom-messenger",
+        "issues": "https://github.com/jimstrike/craft-intercom-messenger/issues"
+    },
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Dhimiter Karalliu",
+            "homepage": "https://github.com/jimstrike/"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "jimstrike\\intercommessenger\\": "src/"
+        }
+    },
+    "extra": {
+        "handle": "intercom-messenger",
+        "name": "Intercom Messenger",
+        "developer": "Dhimiter Karalliu",
+        "description": "This is Intercom: the Business Messenger you and your customers will love.",
+        "changelogUrl": "https://github.com/jimstrike/craft-intercom-messenger/blob/main/CHANGELOG.md",
+        "documentationUrl": "https://github.com/jimstrike/craft-intercom-messenger/blob/main/README.md"
+    }
+}

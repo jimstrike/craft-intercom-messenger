@@ -1,0 +1,57 @@
+{##
+ # Intercom Messenger plugin for Craft CMS 3.x
+ #
+ # Intercom.com: the Business Messenger you and your customers will love.
+ # Sure, it does live chat. But there’s also bots, apps, product tours, and more
+ # like email, messages, and a help center that help you build relationships with your customers.
+ # For more information visit: https://www.intercom.com/
+ #
+ # @link      https://github.com/jimstrike
+ # @copyright Copyright (c) Dhimiter Karalliu
+ #}
+{% extends "#{plugin.handle}/_layout.html" %}
+
+{% set title = 'page.settings.title'|tt %}
+
+{% set fullPageForm = true %}
+
+{% set selectedSubnavItem = 'settings' %}
+
+{% block actionButton %}
+    <input type="submit" class="btn submit" value="{{ 'global.save'|tt }}">
+{% endblock %}
+
+{% block content %}
+    <h2>{{ currentSite.name }}</h2>
+
+    {% if plugin.settings.getAppId(currentSite.id) is empty or plugin.settings.getEnabled(currentSite.id) is empty %}
+        {{ _self.note((plugin.help ?? null)) }}
+    {% endif %}
+    
+    {% include 'intercom-messenger/_settings/_form' with { 
+        'site': currentSite, 
+        'plugin': plugin,
+    } %}
+{% endblock %}
+
+{% macro note(help) %}
+    <hr>
+
+    <div class="pane">
+        <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+        <div class="light" style="display: inline;">
+            {{ 'page.settings.footnote'|tt({
+                'trial': '<a href="'~ (help.signup ?? '#') ~'" rel="noopener" target="_blank">'~ 'global.trial'|tt|lower ~'</a>',
+                'subscription': '<a href="'~ (help.signup ?? '#') ~'" rel="noopener" target="_blank">'~ 'global.subscription'|tt|lower ~'</a>',
+                'developer_account': '<a href="'~ (help.developer_signup ?? '#') ~'" rel="noopener" target="_blank">'~ 'intercom.developer_account'|tt|lower ~'</a>',
+                'intercom_homepage': '<a href="'~ (help.homepage ?? '#') ~'" class="go" rel="noopener" target="_blank">'~ 'intercom'|tt ~'</a>'
+            })|raw }} 
+        </div>
+    </div>
+{% endmacro %}
+
+{% css -%}
+    /*.ns-{{ plugin.handle }}.settings .content-pane { box-shadow: none; }*/
+    .ns-{{ plugin.handle }}.settings hr { border-color: #e4edf6; border-width: 1px; }
+    .ns-{{ plugin.handle }}.settings hr.divider { border-color: #e4edf6; border-width: 3px; }
+{%- endcss %}

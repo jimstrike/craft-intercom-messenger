@@ -1,0 +1,64 @@
+{##
+ # Intercom Messenger plugin for Craft CMS 3.x
+ #
+ # Intercom.com: the Business Messenger you and your customers will love.
+ # Sure, it does live chat. But there’s also bots, apps, product tours, and more
+ # like email, messages, and a help center that help you build relationships with your customers.
+ # For more information visit: https://www.intercom.com/
+ #
+ # @link      https://github.com/jimstrike
+ # @copyright Copyright (c) Dhimiter Karalliu
+ #}
+{% extends "_layouts/cp.html" %}
+
+{% block actionButton %}{% endblock %}
+
+{% set crumbs = [
+    { label: plugin.name, url: url(plugin.handle) }
+] %}
+
+{% set bodyClass = "ns-#{plugin.handle} #{craft.app.controller.id} #{craft.app.controller.id}-#{craft.app.controller.action.id}" %}
+
+{% block content %}{% endblock %}
+
+{% block sidebar %}
+    <nav>
+        <ul>
+            <li class="heading">
+                <img src="{{ intercom_messenger_asset('images/logotype-transparent-black.svg') }}" style="width: 100%; max-width: 120px;">
+            </li>
+            <li class="heading"><span>{{ 'subnav.settings.heading'|tt }}</span></li>
+            {% for site in craft.app.sites.allSites %}
+                <li>
+                    <a{{ selectedSubnavItem == 'settings' and site.handle == currentSite.handle ? ' class="sel"' : '' }} href="{{ url("#{plugin.handle}/settings", { 'site': site.handle }) }}">
+                        <span class="status {{ plugin.settings.getEnabled(site.id) ? 'green' : 'red' }}"></span>
+                        <span class="label">{{ site.name }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+
+            <li class="heading"><span>{{ 'global.documentation'|tt }}</span></li>
+            <li>
+                <a href="{{ craft[plugin.handle].composer.extra.documentationUrl ?? '#' }}" rel="noopener" target="_blank">{{ 'global.readme.github'|tt }} <span class="go"></span></a>
+            </li>
+
+            <li class="heading"><span>{{ 'intercom.com'|tt }}</span></li>
+            <li>
+                <a href="{{ plugin.help.homepage ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.homepage'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.messenger ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.help.messenger'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.find_app_id ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.help.find_app_id'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.trusted_domains ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.help.trusted_domains'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.identity_verification ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.help.identity_verification'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.customize_basics ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.help.customize_basics'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.developer_signup ?? '#' }}" rel="noopener" target="_blank">{{ 'intercom.developer_account'|tt }} <span class="go"></span></a>
+                <a href="{{ plugin.help.help_center ?? '#' }}" rel="noopener" target="_blank">{{ 'global.help_center'|tt }} <span class="go"></span></a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block footer %}
+    <p class="smalltext">
+        {{ plugin.name }} -  {{ "v#{plugin.version}" }}
+    </p>
+{% endblock %}
