@@ -1,5 +1,11 @@
 # Release Notes for "Intercom Messenger" plugin
 
+## 1.0.2 - 2021-07-17
+
+### Changed
+
+- Removed composer lock file from version control and added to gitignore.
+
 ## 1.0.1 - 2021-07-17
 
 ### Changed
