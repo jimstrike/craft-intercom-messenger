@@ -297,6 +297,6 @@ class Messenger extends Component
      */
     private function _onscroll(): string
     {
-        return "const intercomMessengerWindowHeight=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;const intercomMessengerDocumentHeight=document.documentElement.scrollHeight;window.addEventListener('scroll',function(){const intercomMessengerWindowScrollTop=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0;if(intercomMessengerWindowScrollTop+intercomMessengerWindowHeight>intercomMessengerDocumentHeight-80){Intercom('update',{'hide_default_launcher':false})}else{Intercom('update',{'hide_default_launcher':true})}},false);";
+        return "var intercomMessengerPlugin={windowHeight:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,documentHeight:document.documentElement.scrollHeight};window.addEventListener('scroll',function(){intercomMessengerPlugin.windowScrollTop=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0;if(intercomMessengerPlugin.windowScrollTop+intercomMessengerPlugin.windowHeight>intercomMessengerPlugin.documentHeight-240){Intercom('update',{'hide_default_launcher':false})}else{Intercom('update',{'hide_default_launcher':true})}},false);";
     }
 }
