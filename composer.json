@@ -2,7 +2,7 @@
     "name": "jimstrike/craft-intercom-messenger",
     "description": "Intercom Messenger",
     "type": "craft-plugin",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "keywords": [
         "craft",
         "cms",
@@ -42,7 +42,7 @@
     "extra": {
         "handle": "intercom-messenger",
         "name": "Intercom Messenger",
-        "developer": "Dhimiter Karalliu",
+        "developer": "Jimstrike",
         "description": "This is Intercom: the Business Messenger you and your customers will love.",
         "changelogUrl": "https://github.com/jimstrike/craft-intercom-messenger/blob/main/CHANGELOG.md",
         "documentationUrl": "https://github.com/jimstrike/craft-intercom-messenger/blob/main/README.md"
