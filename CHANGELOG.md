@@ -1,6 +1,6 @@
 # Release Notes for "Intercom Messenger" plugin
 
-## 2.0.0 - UNRELEASED
+## 2.0.0 - 2022-06-22
 
 ### Changed
 
