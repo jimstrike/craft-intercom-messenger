@@ -1,4 +1,4 @@
-# Intercom Messenger plugin for Craft CMS 3.x
+# Intercom Messenger plugin for Craft CMS 4.x
 
 This is Intercom: the Business Messenger you and your customers will love
 
@@ -13,7 +13,7 @@ For more information visit: [Intercom.com](https://www.intercom.com/).
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.0 or later.
+This plugin requires Craft CMS 4.0.0 or later.
 
 You will need an Intercom [trial](https://www.intercom.com/pricing) or [subscription](https://www.intercom.com/pricing) in order to use this plugin. Or you can create a free [developer account](https://app.intercom.com/a/developer-signup) to build and test Intercom Messenger in development environment before signing up for a subcription.
 
@@ -144,6 +144,21 @@ You can choose to disable the standard launcher so that only your custom launche
 ```
 
 > **Note**: You need to enable custom launcher in `Intercom Messenger → Site Settings` or `"config/intercom-messenger.php"` file before you can use this feature.
+
+## Craft 3
+
+To use this plugin with Craft 3 you need to install it from the latest v1.* tag version. [View all tags](https://github.com/jimstrike/craft-intercom-messenger/tags).
+
+```bash
+# Go to project directory
+cd /path/to/my/craft-project
+
+# Tell Composer to load the plugin
+composer require jimstrike/craft-intercom-messenger:1.0.3
+
+# Tell Craft to install the plugin
+./craft plugin/install intercom-messenger
+```
 
 ## Screenshots
 

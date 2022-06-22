@@ -1,6 +1,6 @@
 <?php
 /**
- * Intercom Messenger plugin for Craft CMS 3.x
+ * Intercom Messenger plugin for Craft CMS 4.x
  *
  * Intercom.com: the Business Messenger you and your customers will love.
  * Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -44,7 +44,7 @@ class Plugin extends \craft\base\Plugin
      *
      * @var Plugin
      */
-    public static $plugin;
+    public static self $plugin;
 
     /**
      * To execute your plugin’s migrations, you’ll need to increase its schema version.
@@ -52,19 +52,19 @@ class Plugin extends \craft\base\Plugin
      * @inheritdoc
      * @var string
      */
-    public $schemaVersion = '1.0.3';
+    public string $schemaVersion = '2.0.0';
 
     /**
      * @inheritdoc
      * @var bool
      */
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
     /**
      * @inheritdoc
      * @var bool
      */
-    public $hasCpSection = true;
+    public bool $hasCpSection = true;
 
     /**
      * @var string
@@ -112,7 +112,7 @@ class Plugin extends \craft\base\Plugin
     /**
      * @inheritdoc
      */
-    public function getSettingsResponse()
+    public function getSettingsResponse(): mixed
     {
         return Craft::$app->getResponse()->redirect(UrlHelper::cpUrl($this->handle . '/settings'));
     }
@@ -125,7 +125,7 @@ class Plugin extends \craft\base\Plugin
      * 
      * @return Settings|null
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?craft\base\Model
     {
         $settings = new Settings();
         
