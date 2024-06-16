@@ -116,7 +116,8 @@ return [
     'settings.identity_secret.placeholder' => 'Paste Intercom identity verification secret here...',
 
     // Settings footnotes
-    'settings.app_id.footnote' => 'To find your workspace ID sign in to your account and navigate to your workspace. Then check the URL in the address bar. It will look something like this: {logged_in_url_pattern}. The part of the URL where it says "{workspace_id}" will be your app or workspace ID.',
+    // 'settings.app_id.footnote' => 'To find your workspace ID sign in to your account and navigate to your workspace. Then check the URL in the address bar. It will look something like this: {logged_in_url_pattern}. The part of the URL where it says "{workspace_id}" will be your app or workspace ID.',
+    'settings.app_id.footnote' => 'You may see references to "Workspace ID" and "App ID". These are the same values. You can find this value in the URL when you are logged into Intercom. It will be a string of numbers and letters directly after {apps/}. So for {logged_in_url_pattern} the workspace ID is {workspace_id}.',
     'settings.setup_logged_in_user.footnote' => 'In order to enforce identity verification for logged-in users you must turn on "{user_hash}" together with "{user_id}" and/or "{email}". Admin users are excluded from this setup. When previewing in control panel or plugin\'s admin section, a fake logged-in user is generated. {enable_identity_verification}',
     'settings.identity_secret.footnote' => 'Verify your {user_id} hash or your {email} hash with Intercom\'s hash calculator. If they match then you are good to go, otherwise update identity verification secret above with the correct one.',
     'settings.use_own_theme_color.footnote' => 'For a better user experience set "{action_color}" and "{background_color}" with the same value.',
