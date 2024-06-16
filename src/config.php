@@ -191,13 +191,13 @@ return [
     'backgroundColor' => '#8f00b3',
 
     /**
-     * Use your own color theme?
+     * Use your own theme color?
      * 
      * Allows you to overwrite Intercom's color settings and set your own "Action color" and "Background color" above.
      * 
      * @var bool
      */
-    'useOwnColorTheme' => false,
+    'useOwnThemeColor' => false,
 
     /**
      * Show standard launcher only when a user scrolls to the bottom of the page?

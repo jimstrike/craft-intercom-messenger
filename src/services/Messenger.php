@@ -144,7 +144,7 @@ class Messenger extends Component
             ]);
         }
 
-        if (true === $settings->getUseOwnColorTheme($siteId)) {
+        if (true === $settings->getUseOwnThemeColor($siteId)) {
             if ($settings->getActionColor($siteId)) {
                 $a = array_merge($a, [
                     'action_color' => $settings->getActionColor($siteId),

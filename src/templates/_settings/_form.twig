@@ -299,7 +299,7 @@
 {{ forms.colorField({
     label: 'settings.action_color.label'|tt,
     instructions: 'settings.action_color.instructions'|tt({
-        'default_color': '<code>'~ settings.getDefaultColorTheme() ~'</code>'
+        'default_color': '<code>'~ settings.getDefaultThemeColor() ~'</code>'
     }),
     name: 'settings[actionColor]',
     value: settings.getActionColor(site.id),
@@ -315,7 +315,7 @@
 {{ forms.colorField({
     label: 'settings.background_color.label'|tt,
     instructions: 'settings.background_color.instructions'|tt({
-        'default_color': '<code>'~ settings.getDefaultColorTheme() ~'</code>'
+        'default_color': '<code>'~ settings.getDefaultThemeColor() ~'</code>'
     }),
     name: 'settings[backgroundColor]',
     value: settings.getBackgroundColor(site.id),
@@ -329,16 +329,16 @@
 {# ------------------------------- #}
 
 {{ forms.lightswitchField({
-    label: 'settings.use_own_color_theme.label'|tt  ~ '?',
-    instructions: 'settings.use_own_color_theme.instructions'|tt({
+    label: 'settings.use_own_theme_color.label'|tt  ~ '?',
+    instructions: 'settings.use_own_theme_color.instructions'|tt({
         'action_color': 'settings.action_color.label'|tt,
         'background_color': 'settings.background_color.label'|tt
     }),
-    name: 'settings[useOwnColorTheme]',
+    name: 'settings[useOwnThemeColor]',
     value: 1,
     required: false,
-    warning: _self.configWarning('useOwnColorTheme', plugin.handle, site.id)|trim,
-    on: settings.getUseOwnColorTheme(site.id)
+    warning: _self.configWarning('useOwnThemeColor', plugin.handle, site.id)|trim,
+    on: settings.getUseOwnThemeColor(site.id)
 }) }}
 
 <hr class="divider">

@@ -26,9 +26,9 @@ trait MessengerTrait
     ];
 
     /**
-     * @var string $defaultColorTheme 
+     * @var string $defaultThemeColor 
      */
-    private $defaultColorTheme = '#8f00b3';
+    private $defaultThemeColor = '#8f00b3';
     
     /**
      * API base regions
@@ -97,8 +97,8 @@ trait MessengerTrait
      * 
      * @return string 
      */
-    public function getDefaultColorTheme(): string
+    public function getDefaultThemeColor(): string
     {
-        return $this->defaultColorTheme;
+        return $this->defaultThemeColor;
     }
 }

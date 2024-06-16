@@ -43,7 +43,7 @@ class Settings extends Model
     public $verticalPadding;
     public $actionColor;
     public $backgroundColor;
-    public $useOwnColorTheme;
+    public $useOwnThemeColor;
     public $showDefaultLauncherScrollBottomPageOnly;
     public $enableCustomLauncher;
     public $hideDefaultLauncher;
@@ -217,7 +217,7 @@ class Settings extends Model
     public function getActionColor(int $siteId = null): string
     {
         $setting = $this->_getSetting('actionColor', $siteId);
-        $color = $setting ?: $this->getDefaultColorTheme();
+        $color = $setting ?: $this->getDefaultThemeColor();
 
         return PluginHelper::color($color);
     }
@@ -230,20 +230,20 @@ class Settings extends Model
     public function getBackgroundColor(int $siteId = null): string
     {
         $setting = $this->_getSetting('backgroundColor', $siteId);
-        $color = $setting ?: $this->getDefaultColorTheme();
+        $color = $setting ?: $this->getDefaultThemeColor();
 
         return PluginHelper::color($color);
     }
 
     /**
-     * Use own color theme
+     * Use your own theme color
      * 
      * @param int|null $siteId default
      * @return bool
      */
-    public function getUseOwnColorTheme(int $siteId = null): bool
+    public function getUseOwnThemeColor(int $siteId = null): bool
     {
-        $setting = $this->_getSetting('useOwnColorTheme', $siteId);
+        $setting = $this->_getSetting('useOwnThemeColor', $siteId);
         
         return (bool)$setting ?: false;
     }
