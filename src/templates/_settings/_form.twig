@@ -341,6 +341,16 @@
     on: settings.getUseOwnThemeColor(site.id)
 }) }}
 
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.use_own_theme_color.footnote'|tt({
+            'action_color': 'settings.action_color.label'|tt,
+            'background_color': 'settings.background_color.label'|tt
+        }) }}
+    </div>
+</div>
+
 <hr class="divider">
 
 {# ------------------------------- #}
