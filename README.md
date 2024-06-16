@@ -1,4 +1,4 @@
-# Intercom Messenger plugin for Craft CMS 4.x
+# Intercom Messenger plugin for Craft CMS 4.x|5.x
 
 This is Intercom: the Business Messenger you and your customers will love
 
@@ -13,7 +13,7 @@ For more information visit: [Intercom.com](https://www.intercom.com/).
 
 ## Requirements
 
-This plugin requires Craft CMS 4.0.0 or later.
+This plugin requires Craft CMS 4.0.0|5.0.0 or later.
 
 You will need an Intercom [trial](https://www.intercom.com/pricing) or [subscription](https://www.intercom.com/pricing) in order to use this plugin. Or you can create a free [developer account](https://app.intercom.com/a/developer-signup) to build and test Intercom Messenger in development environment before signing up for a subcription.
 

@@ -1,5 +1,5 @@
 {##
- # Intercom Messenger plugin for Craft CMS 4.x
+ # Intercom Messenger plugin for Craft CMS 4.x|5.x
  #
  # Intercom.com: the Business Messenger you and your customers will love.
  # Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -26,7 +26,7 @@
     first: true,
     label: 'settings.app_id.label'|tt,
     instructions: 'settings.app_id.instructions'|tt({ 
-        'intercom.help.find_app_id': '<a href="'~ plugin.help.find_app_id ~'" class="go" rel="noopener" target="_blank">'~ 'intercom.help.find_app_id'|tt ~'</a>' 
+        'logged_in_url_pattern': plugin.help.logged_in_url_pattern,
     })|raw,
     name: 'settings[appId]',
     value: settings.getAppId(site.id),
@@ -35,7 +35,18 @@
     errors: settings.getAppId(site.id) is empty ? ['settings.app_id.errors.blank'|tt] : null
 }) }}
 
-<a href="{{ url("#{plugin.handle}/preview", {'site': site.handle}) }}" class="btn" rel="noopener" target="_blank">{{ 'global.preview'|tt }} <span class="go"></span></a>
+<a href="{{ url(plugin.handle ~'/preview', {'site': site.handle}) }}" class="btn" rel="noopener" target="_blank">{{ 'global.preview'|tt }} <span class="go"></span></a>
+
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.app_id.footnote'|tt({
+            'apps/': '<code style="background: lightyellow;">apps/</code>',
+            'logged_in_url_pattern': '<code style="background: lightyellow;">'~ plugin.help.logged_in_url_pattern|tt({'YOUR-WORKSPACE-ID': 'ecahpwf5'}) ~'</code>',
+            'workspace_id': '<code style="background: lightyellow;">ecahpwf5</code>'
+        })|raw }}
+    </div>
+</div>
 
 <hr>
 
@@ -279,8 +290,67 @@
     required: false,
     maxlength: 3,
     size: 10,
-    verticalPadding: _self.configWarning('verticalPadding', plugin.handle, site.id)|trim,
+    warning: _self.configWarning('verticalPadding', plugin.handle, site.id)|trim,
 }) }}
+
+<hr class="divider">
+
+{# ------------------------------- #}
+
+{{ forms.colorField({
+    label: 'settings.action_color.label'|tt,
+    instructions: 'settings.action_color.instructions'|tt({
+        'default_color': '<code>'~ settings.getDefaultThemeColor() ~'</code>'
+    }),
+    name: 'settings[actionColor]',
+    value: settings.getActionColor(site.id),
+    required: false,
+    warning: _self.configWarning('actionColor', plugin.handle, site.id)|trim,
+    maxlength: 7
+}) }}
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.colorField({
+    label: 'settings.background_color.label'|tt,
+    instructions: 'settings.background_color.instructions'|tt({
+        'default_color': '<code>'~ settings.getDefaultThemeColor() ~'</code>'
+    }),
+    name: 'settings[backgroundColor]',
+    value: settings.getBackgroundColor(site.id),
+    required: false,
+    warning: _self.configWarning('backgroundColor', plugin.handle, site.id)|trim,
+    maxlength: 7
+}) }}
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.lightswitchField({
+    label: 'settings.use_own_theme_color.label'|tt  ~ '?',
+    instructions: 'settings.use_own_theme_color.instructions'|tt({
+        'action_color': 'settings.action_color.label'|tt,
+        'background_color': 'settings.background_color.label'|tt
+    }),
+    name: 'settings[useOwnThemeColor]',
+    value: 1,
+    required: false,
+    warning: _self.configWarning('useOwnThemeColor', plugin.handle, site.id)|trim,
+    on: settings.getUseOwnThemeColor(site.id)
+}) }}
+
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.use_own_theme_color.footnote'|tt({
+            'action_color': 'settings.action_color.label'|tt,
+            'background_color': 'settings.background_color.label'|tt
+        }) }}
+    </div>
+</div>
 
 <hr class="divider">
 
@@ -351,6 +421,18 @@
     </div>
 </div>
 
+{# ------------------------------- #}
+
+{{ forms.selectField({
+    label: 'settings.api_regional_location.label'|tt,
+    instructions: 'settings.api_regional_location.instructions'|tt,
+    name: 'settings[apiRegionalLocation]',
+    value: settings.getApiRegionalLocation(site.id),
+    options: settings.apiRegionalLocationOptions(),
+    required: false,
+    warning: _self.configWarning('apiRegionalLocation', plugin.handle, site.id)|trim,
+}) }}
+
 <hr>
 
 {# ------------------------------- #}
@@ -414,7 +496,7 @@
 {% macro table_sections(site, settings) %}
     <table class="data fullwidth fixed-layout">
         <tbody>
-            {% for section in craft.app.sections.allSections %}
+            {% for section in craft.app.entries.allSections %}
                 <tr>
                     <th>{{ section.name }}</th>
                     <td style="text-align: right;">

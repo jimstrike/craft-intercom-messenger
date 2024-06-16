@@ -1,6 +1,6 @@
 <?php
 /**
- * Intercom Messenger plugin for Craft CMS 4.x
+ * Intercom Messenger plugin for Craft CMS 4.x|5.x
  *
  * Intercom.com: the Business Messenger you and your customers will love.
  * Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -67,5 +67,35 @@ class PluginHelper {
         $str = preg_replace(["/\s+\n/", "/\n\s+/", "/ +/"], ["\n", "\n ", " "], $str);
 
         return $str;
+    }
+
+    /**
+     * Sanitize a hex color value
+     * 
+     * @param string $color
+     * @param bool $hash default
+     * 
+     * @return string
+     */
+    public static function color(string $color, bool $hash = true): string
+    {
+        $color = \str_replace('#', '', trim($color));
+    
+        // If the string is 6 characters long then use it in pairs.
+        if (3 == \strlen($color)) {
+            $color = \substr($color, 0, 1) . \substr($color, 0, 1) . \substr($color, 1, 1) . \substr($color, 1, 1) . \substr($color, 2, 1) . \substr($color, 2, 1);
+        }
+    
+        $substr = [];
+        
+        for ($i = 0; $i <= 5; $i++) {
+            $default = 0 == $i ? 'F' : $substr[$i-1];
+            $substr[$i] = \substr($color, $i, 1);
+            $substr[$i] = false === $substr[$i] || !\ctype_xdigit($substr[$i]) ? $default : $substr[$i];
+        }
+
+        $hex = \implode('', $substr);
+    
+        return !$hash ? $hex : '#' . $hex;
     }
 }
