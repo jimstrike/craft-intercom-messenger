@@ -26,7 +26,7 @@
     first: true,
     label: 'settings.app_id.label'|tt,
     instructions: 'settings.app_id.instructions'|tt({ 
-        'intercom.help.find_app_id': '<a href="'~ plugin.help.find_app_id ~'" class="go" rel="noopener" target="_blank">'~ 'intercom.help.find_app_id'|tt ~'</a>' 
+        'logged_in_url_pattern': plugin.help.logged_in_url_pattern,
     })|raw,
     name: 'settings[appId]',
     value: settings.getAppId(site.id),
@@ -35,7 +35,17 @@
     errors: settings.getAppId(site.id) is empty ? ['settings.app_id.errors.blank'|tt] : null
 }) }}
 
-<a href="{{ url("#{plugin.handle}/preview", {'site': site.handle}) }}" class="btn" rel="noopener" target="_blank">{{ 'global.preview'|tt }} <span class="go"></span></a>
+<a href="{{ url(plugin.handle ~'/preview', {'site': site.handle}) }}" class="btn" rel="noopener" target="_blank">{{ 'global.preview'|tt }} <span class="go"></span></a>
+
+<div class="pane">
+    <strong class="smalltext" ><u>{{ 'global.note'|tt|upper }}</u>:</strong>
+    <div class="light" style="display: inline;">
+        {{ 'settings.app_id.footnote'|tt({
+            'logged_in_url_pattern': '<code style="background: lightyellow;">'~ plugin.help.logged_in_url_pattern|tt({'YOUR-WORKSPACE-ID': 'YOUR-WORKSPACE-ID'}) ~'</code>',
+            'workspace_id': '<code>YOUR-WORKSPACE-ID</code>'
+        })|raw }}
+    </div>
+</div>
 
 <hr>
 
@@ -458,4 +468,3 @@
         {{ false }}
     {%- endif -%}
 {%- endmacro %}
-    

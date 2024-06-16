@@ -87,7 +87,7 @@ return [
     'settings.api_regional_location.label' => 'API regional location',
 
     // Settings instructions
-    'settings.app_id.instructions' => 'Workspace ID for your Intercom account. {intercom.help.find_app_id}',
+    'settings.app_id.instructions' => 'Workspace ID for your Intercom account',
     'settings.enabled.instructions' => 'Determines if the plugin should be enabled on your site. You can preview the plugin before enabling it.',
     'settings.setup_logged_in_user.instructions' => 'When you set up your Messenger for logged-in users, you know who your users are when they chat with you or use your product. This helps you support your customers and answer questions via live chat. Choose which user fields you want to send.',
     'settings.identity_secret.instructions' => 'Identity verification prevents third parties from impersonating your logged-in users and seeing their conversations. We strongly recommend that all Intercom customers enforce identity verification. Used in compination with "{user_hash}", "{user_id}" and/or "{email}" from "{setup_logged_in_user}" setting above. {enable_identity_verification}',
@@ -110,6 +110,7 @@ return [
     'settings.identity_secret.placeholder' => 'Paste Intercom identity verification secret here...',
 
     // Settings footnotes
+    'settings.app_id.footnote' => 'To find your workspace ID sign in to your account and navigate to your workspace. Then check the URL in the address bar. It will look something like this: {logged_in_url_pattern}. The part of the URL where it says "{workspace_id}" will be your app or workspace ID.',
     'settings.setup_logged_in_user.footnote' => 'In order to enforce identity verification for logged-in users you must turn on "{user_hash}" together with "{user_id}" and/or "{email}". Admin users are excluded from this setup. When previewing in control panel or plugin\'s admin section, a fake logged-in user is generated. {enable_identity_verification}',
     'settings.identity_secret.footnote' => 'Verify your {user_id} hash or your {email} hash with Intercom\'s hash calculator. If they match then you are good to go, otherwise update identity verification secret above with the correct one.',
     'settings.show_default_launcher_scroll_bottom_page_only.footnote' => 'If your pages are not scrollable then keep this feature turned off.',
