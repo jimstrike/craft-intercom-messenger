@@ -333,7 +333,7 @@ class Settings extends Model
             $active = (bool)$urlPath[1] ?? false;
 
             if ($active && $path == $route) {
-                return true; break;
+                return true;
             }
         }
 
@@ -423,7 +423,7 @@ class Settings extends Model
             $active = (bool)$urlPath[1] ?? false;
 
             if ($path && $active) {
-                return true; break;
+                return true;
             }
         }
 
