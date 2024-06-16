@@ -123,6 +123,7 @@ class Messenger extends Component
         }
 
         $a = [
+            // 'api_base' => 'https://api-iam.intercom.io',
             'app_id' => $settings->getAppId($siteId),
             'alignment' => $settings->getAlignment($siteId),
             'horizontal_padding' => $settings->getHorizontalPadding($siteId), 
@@ -285,10 +286,12 @@ class Messenger extends Component
      */
     private function _script(): string
     {
-        return "/** {COMMENT} */ "
-            . "window.intercomSettings = {YOUR_OBJECT};"
-            . "(function(){var w=window;var ic=w.Intercom;if(typeof ic==='function'){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/{YOUR_APP_ID}';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-        ";
+        $heredoc = <<<SCRIPT
+        window.intercomSettings = {YOUR_OBJECT};
+        (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/{YOUR_APP_ID}';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s, x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+        SCRIPT;
+
+        return $heredoc;
     }
 
     /**
@@ -298,6 +301,10 @@ class Messenger extends Component
      */
     private function _onscroll(): string
     {
-        return "var intercomMessengerPlugin={windowHeight:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,documentHeight:document.documentElement.scrollHeight};window.addEventListener('scroll',function(){intercomMessengerPlugin.windowScrollTop=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0;if(intercomMessengerPlugin.windowScrollTop+intercomMessengerPlugin.windowHeight>intercomMessengerPlugin.documentHeight-240){Intercom('update',{'hide_default_launcher':false})}else{Intercom('update',{'hide_default_launcher':true})}},false);";
+        $heredoc = <<<SCRIPT
+        var intercomMessengerPlugin={windowHeight:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,documentHeight:document.documentElement.scrollHeight};window.addEventListener('scroll',function(){intercomMessengerPlugin.windowScrollTop=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0;if(intercomMessengerPlugin.windowScrollTop+intercomMessengerPlugin.windowHeight>intercomMessengerPlugin.documentHeight-240){Intercom('update',{'hide_default_launcher':false})}else{Intercom('update',{'hide_default_launcher':true})}},false);
+        SCRIPT;
+
+        return $heredoc;
     }
 }
