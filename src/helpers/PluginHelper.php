@@ -68,4 +68,34 @@ class PluginHelper {
 
         return $str;
     }
+
+    /**
+     * Sanitize a hex color value
+     * 
+     * @param string $color
+     * @param bool $hash default
+     * 
+     * @return string
+     */
+    public static function color(string $color, bool $hash = true): string
+    {
+        $color = \str_replace('#', '', trim($color));
+    
+        // If the string is 6 characters long then use it in pairs.
+        if (3 == \strlen($color)) {
+            $color = \substr($color, 0, 1) . \substr($color, 0, 1) . \substr($color, 1, 1) . \substr($color, 1, 1) . \substr($color, 2, 1) . \substr($color, 2, 1);
+        }
+    
+        $substr = [];
+        
+        for ($i = 0; $i <= 5; $i++) {
+            $default = 0 == $i ? 'F' : $substr[$i-1];
+            $substr[$i] = \substr($color, $i, 1);
+            $substr[$i] = false === $substr[$i] || !\ctype_xdigit($substr[$i]) ? $default : $substr[$i];
+        }
+
+        $hex = \implode('', $substr);
+    
+        return !$hash ? $hex : '#' . $hex;
+    }
 }

@@ -144,6 +144,20 @@ class Messenger extends Component
             ]);
         }
 
+        if (true === $settings->getUseOwnColorTheme($siteId)) {
+            if ($settings->getActionColor($siteId)) {
+                $a = array_merge($a, [
+                    'action_color' => $settings->getActionColor($siteId),
+                ]);
+            }
+    
+            if ($settings->getBackgroundColor($siteId)) {
+                $a = array_merge($a, [
+                    'background_color' => $settings->getBackgroundColor($siteId),
+                ]);
+            }
+        }
+
         if (Craft::$app->getEdition() !== CmsEdition::Pro) {
             return $a;
         }

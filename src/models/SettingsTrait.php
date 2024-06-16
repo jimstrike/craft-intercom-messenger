@@ -192,6 +192,16 @@ trait SettingsTrait
         return $a;
     }
 
+    /**
+     * Get default color theme
+     * 
+     * @return string 
+     */
+    public function getDefaultColorTheme(): string
+    {
+        return Plugin::$plugin->messenger->getDefaultColorTheme();
+    }
+
     // Private methods
     // =========================================================================
 

@@ -16,7 +16,7 @@ namespace jimstrike\intercommessenger\models;
 use Craft;
 use craft\base\Model;
 use craft\enums\CmsEdition;
-
+use jimstrike\intercommessenger\helpers\PluginHelper;
 use jimstrike\intercommessenger\Plugin;
 
 /**
@@ -41,6 +41,9 @@ class Settings extends Model
     public $alignment;
     public $horizontalPadding;
     public $verticalPadding;
+    public $actionColor;
+    public $backgroundColor;
+    public $useOwnColorTheme;
     public $showDefaultLauncherScrollBottomPageOnly;
     public $enableCustomLauncher;
     public $hideDefaultLauncher;
@@ -204,6 +207,45 @@ class Settings extends Model
         }
         
         return $setting ?: 20;
+    }
+
+    /**
+     * @param int|null $siteId default
+     * 
+     * @return string
+     */
+    public function getActionColor(int $siteId = null): string
+    {
+        $setting = $this->_getSetting('actionColor', $siteId);
+        $color = $setting ?: $this->getDefaultColorTheme();
+
+        return PluginHelper::color($color);
+    }
+
+    /**
+     * @param int|null $siteId default
+     * 
+     * @return string
+     */
+    public function getBackgroundColor(int $siteId = null): string
+    {
+        $setting = $this->_getSetting('backgroundColor', $siteId);
+        $color = $setting ?: $this->getDefaultColorTheme();
+
+        return PluginHelper::color($color);
+    }
+
+    /**
+     * Use own color theme
+     * 
+     * @param int|null $siteId default
+     * @return bool
+     */
+    public function getUseOwnColorTheme(int $siteId = null): bool
+    {
+        $setting = $this->_getSetting('useOwnColorTheme', $siteId);
+        
+        return (bool)$setting ?: false;
     }
 
     /**

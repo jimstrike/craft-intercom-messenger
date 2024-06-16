@@ -24,6 +24,11 @@ trait MessengerTrait
         'eu' => ['name' => 'region.name.eu', 'url' => 'https://api-iam.eu.intercom.io'],
         'au' => ['name' => 'region.name.au', 'url' => 'https://api-iam.au.intercom.io'],
     ];
+
+    /**
+     * @var string $defaultColorTheme 
+     */
+    private $defaultColorTheme = '#8f00b3';
     
     /**
      * API base regions
@@ -85,5 +90,15 @@ trait MessengerTrait
         $api = $this->getApiBaseRegion($region);
 
         return $api['url'] ?? $this->apiBaseRegions[$this->getApiDefaultBaseRegionKey()]['url'];
+    }
+
+    /**
+     * Get default color theme
+     * 
+     * @return string 
+     */
+    public function getDefaultColorTheme(): string
+    {
+        return $this->defaultColorTheme;
     }
 }

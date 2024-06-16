@@ -289,7 +289,56 @@
     required: false,
     maxlength: 3,
     size: 10,
-    verticalPadding: _self.configWarning('verticalPadding', plugin.handle, site.id)|trim,
+    warning: _self.configWarning('verticalPadding', plugin.handle, site.id)|trim,
+}) }}
+
+<hr class="divider">
+
+{# ------------------------------- #}
+
+{{ forms.colorField({
+    label: 'settings.action_color.label'|tt,
+    instructions: 'settings.action_color.instructions'|tt({
+        'default_color': '<code>'~ settings.getDefaultColorTheme() ~'</code>'
+    }),
+    name: 'settings[actionColor]',
+    value: settings.getActionColor(site.id),
+    required: false,
+    warning: _self.configWarning('actionColor', plugin.handle, site.id)|trim,
+    maxlength: 7
+}) }}
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.colorField({
+    label: 'settings.background_color.label'|tt,
+    instructions: 'settings.background_color.instructions'|tt({
+        'default_color': '<code>'~ settings.getDefaultColorTheme() ~'</code>'
+    }),
+    name: 'settings[backgroundColor]',
+    value: settings.getBackgroundColor(site.id),
+    required: false,
+    warning: _self.configWarning('backgroundColor', plugin.handle, site.id)|trim,
+    maxlength: 7
+}) }}
+
+<hr>
+
+{# ------------------------------- #}
+
+{{ forms.lightswitchField({
+    label: 'settings.use_own_color_theme.label'|tt  ~ '?',
+    instructions: 'settings.use_own_color_theme.instructions'|tt({
+        'action_color': 'settings.action_color.label'|tt,
+        'background_color': 'settings.background_color.label'|tt
+    }),
+    name: 'settings[useOwnColorTheme]',
+    value: 1,
+    required: false,
+    warning: _self.configWarning('useOwnColorTheme', plugin.handle, site.id)|trim,
+    on: settings.getUseOwnColorTheme(site.id)
 }) }}
 
 <hr class="divider">
