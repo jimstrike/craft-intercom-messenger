@@ -1,6 +1,6 @@
 <?php
 /**
- * Intercom Messenger plugin for Craft CMS 4.x
+ * Intercom Messenger plugin for Craft CMS 4.x|5.x
  *
  * Intercom.com: the Business Messenger you and your customers will love.
  * Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -15,9 +15,9 @@ namespace jimstrike\intercommessenger\models;
 
 use Craft;
 use craft\base\Model;
-
-use jimstrike\intercommessenger\Plugin;
+use craft\enums\CmsEdition;
 use jimstrike\intercommessenger\helpers\PluginHelper;
+use jimstrike\intercommessenger\Plugin;
 
 /**
  * Class Settings
@@ -28,6 +28,8 @@ use jimstrike\intercommessenger\helpers\PluginHelper;
  */
 class Settings extends Model
 {
+    use SettingsTrait;
+
     // Public
     public $appId;
     public $enabled;
@@ -39,9 +41,13 @@ class Settings extends Model
     public $alignment;
     public $horizontalPadding;
     public $verticalPadding;
+    public $actionColor;
+    public $backgroundColor;
+    public $useOwnThemeColor;
     public $showDefaultLauncherScrollBottomPageOnly;
     public $enableCustomLauncher;
     public $hideDefaultLauncher;
+    public $apiRegionalLocation;
 
     // Getters and Setters
     // =========================================================================
@@ -80,7 +86,7 @@ class Settings extends Model
      */
     public function getSetupLoggedInUser(int $siteId = null): array
     {
-        if (Craft::$app->getEdition() != Craft::Pro) {
+        if (Craft::$app->getEdition() != CmsEdition::Pro) {
             return [];
         }
 
@@ -97,7 +103,7 @@ class Settings extends Model
      */
     public function getIdentitySecret(int $siteId = null): string
     {
-        if (Craft::$app->getEdition() != Craft::Pro) {
+        if (Craft::$app->getEdition() != CmsEdition::Pro) {
             return '';
         }
 
@@ -114,7 +120,7 @@ class Settings extends Model
      */
     public function getSetupUserGroups(int $siteId = null): array
     {
-        if (Craft::$app->getEdition() !== Craft::Pro) {
+        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
             return [];
         }
 
@@ -204,6 +210,45 @@ class Settings extends Model
     }
 
     /**
+     * @param int|null $siteId default
+     * 
+     * @return string
+     */
+    public function getActionColor(int $siteId = null): string
+    {
+        $setting = $this->_getSetting('actionColor', $siteId);
+        $color = $setting ?: $this->getDefaultThemeColor();
+
+        return PluginHelper::color($color);
+    }
+
+    /**
+     * @param int|null $siteId default
+     * 
+     * @return string
+     */
+    public function getBackgroundColor(int $siteId = null): string
+    {
+        $setting = $this->_getSetting('backgroundColor', $siteId);
+        $color = $setting ?: $this->getDefaultThemeColor();
+
+        return PluginHelper::color($color);
+    }
+
+    /**
+     * Use your own theme color
+     * 
+     * @param int|null $siteId default
+     * @return bool
+     */
+    public function getUseOwnThemeColor(int $siteId = null): bool
+    {
+        $setting = $this->_getSetting('useOwnThemeColor', $siteId);
+        
+        return (bool)$setting ?: false;
+    }
+
+    /**
      * Get show default launcher scroll bottom page only
      * 
      * @param int|null $siteId default
@@ -242,306 +287,20 @@ class Settings extends Model
         return (bool)$setting ?: false;
     }
 
-    // Helper set methods
-    // =========================================================================
-
     /**
-     * Set array value for property
-     * 
-     * @param string $field
-     * @param mixed $value
-     * @param int $siteId default
-     * 
-     * @return array
-     * $this->appId = [
-     *     ['siteId' => 'value'],
-     *     ['siteId' => 'value']
-     * ]
-     */
-    public function makeValue(string $field, $value, int $siteId = 1): array
-    {
-        // Sanitize value
-        $value = $this->_sanitizeValue($field, $value, $siteId);
-
-        $base = \is_array($this->$field) ? $this->$field : [];
-        
-        $replace = [($siteId) => (\is_string($value) ? \trim($value) : ($value ?? ''))];
-
-        $a = \array_replace($base, $replace) ?? (array)$this->$field;
-        
-        \ksort($a);
-
-        return $a;
-    }
-
-    // Misc helpers
-    // =========================================================================
-
-    /**
-     * Check is enabled by sections
+     * Get API reginal location
      * 
      * @param int|null $siteId default
-     * @return bool
+     * @return string
      */
-    public function isEnabledBySections(int $siteId = null): bool
+    public function getApiRegionalLocation(int $siteId = null): string
     {
-        $sections = \array_keys(\array_filter((array)$this->getSections($siteId)));
+        $setting = $this->_getSetting('apiRegionalLocation', $siteId);
 
-        if (!$sections) {
-            return true;
-        }
-
-        $request = Craft::$app->getRequest();
-
-        $uri = \implode('/', (array)$request->getSegments()) ?: '__home__';
-        $entry = \craft\elements\Entry::find()->uri($uri)->one();
-
-        if ($entry instanceof \craft\elements\Entry) {
-            if (\in_array(($entry->sectionId ?? null), $sections)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check is enabled by URL paths
-     * 
-     * @param int|null $siteId default
-     * @return bool
-     */
-    public function isEnabledByUrlPaths(int $siteId = null): bool
-    {
-        $urlPaths = $this->getUrlPaths($siteId);
-        
-        if (!$urlPaths) {
-            return true;
-        }
-
-        $hasActiveUrlPaths = $this->_hasActiveUrlPaths($siteId, $urlPaths);
-
-        if (!$hasActiveUrlPaths) {
-            return true;
-        }
-
-        $route = '/' . trim(Craft::$app->getRequest()->getFullPath(), '/');
-
-        foreach ($urlPaths as $urlPath) {
-            $path = $urlPath[0] ?? '/';
-            $active = (bool)$urlPath[1] ?? false;
-
-            if ($active && $path == $route) {
-                return true; break;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Check is enabled by multiple fields
-     * 
-     * @param int|null $siteId default
-     * @return bool
-     */
-    public function isEnabled(int $siteId = null): bool
-    {
-        $hasActiveUrlPaths = $this->_hasActiveUrlPaths($siteId);
-
-        if ($hasActiveUrlPaths) {
-            return $this->getEnabled($siteId) 
-                && $this->isEnabledByUrlPaths($siteId)
-            ;
-        }
-
-        $isEnabledBySections = $this->isEnabledBySections($siteId);
-
-        return $this->getEnabled($siteId)
-            && $this->isEnabledBySections($siteId)
-        ;
-    }
-
-    /**
-     * User field map
-     * 
-     * @return array
-     */
-    public function setupLoggedInUserFieldMap(): array
-    {
-        return [
-            'name' => Plugin::t('settings.setup_logged_in_user.name.label'),
-            'email' => Plugin::t('settings.setup_logged_in_user.email.label'),
-            'dateCreated' => Plugin::t('settings.setup_logged_in_user.date_created.label'),
-            'userId' => Plugin::t('settings.setup_logged_in_user.user_id.label'),
-            'userHash' => Plugin::t('settings.setup_logged_in_user.user_hash.label'),
-        ];
-    }
-
-    /**
-     * Get alignment options
-     * 
-     * @return array
-     */
-    public function alignmentOptions(): array
-    {
-        return [
-            [
-                'value' => 'right',
-                'label' => Plugin::t('settings.alignment.option.label.right'),
-            ],
-            [
-                'value' => 'left',
-                'label' => Plugin::t('settings.alignment.option.label.left'),
-            ]
-        ];
-    }
-
-    // Private methods
-    // =========================================================================
-
-    /**
-     * Check if any active URL paths
-     * 
-     * @param int|null $siteId default
-     * @param array|null $urlPaths default
-     * @return bool
-     */
-    private function _hasActiveUrlPaths(int $siteId = null, array $urlPaths = null): bool
-    {
-        if (!$urlPaths) {
-            $urlPaths = $this->getUrlPaths($siteId);
-        }
-
-        if (!$urlPaths) {
-            return false;
+        if (!in_array($setting, Plugin::$plugin->messenger->getApiBaseRegionsKeys())) {
+            $setting = Plugin::$plugin->messenger->getApiDefaultBaseRegionKey();
         }
         
-        foreach ($urlPaths as $urlPath) {
-            $path = $urlPath[0] ?? '/';
-            $active = (bool)$urlPath[1] ?? false;
-
-            if ($path && $active) {
-                return true; break;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Sanitize value
-     * 
-     * @param string $field
-     * @param mixed $value
-     * @param int $siteId
-     * @return mixed
-     */
-    private function _sanitizeValue(string $field, $value, int $siteId = 1)
-    {
-        // URL paths
-        if ($field == 'urlPaths') {
-            if (!empty($value) && is_array($value)) {
-                $value = call_user_func(function() use ($value) {
-                    foreach ($value as $key => $row) {
-                        if (!isset($row[0])) {
-                            continue;
-                        }
-        
-                        if (empty($row[0])) {
-                            unset($value[$key]);
-                            continue;
-                        }
-        
-                        $parsed = parse_url($row[0]);
-                        $path = $parsed['path'] ?? '/';
-                        $path = '/' . trim(trim($path), '/');
-                        
-                        $value[$key][0] = $path;
-                    }
-
-                    $col1 = array_column($value, 0);
-                    $col2 = array_column($value, 1);
-
-                    $col1 = array_unique($col1);
-
-                    $a = []; 
-                    
-                    foreach ($col1 as $key => $col) {
-                        $a[$key][0] = $col;
-                        $a[$key][1] = $col2[$key];
-                    }
-                    
-                    return $a;
-                });
-            }
-        }
-
-        // Identity secret
-        if ($field == 'identitySecret') {
-            $value = call_user_func(function() use ($value, $siteId) {
-                if (empty($value)) {
-                    return '';
-                }
-
-                $mask = PluginHelper::mask($value);
-
-                if ($value == $mask) {
-                    $value = $this->getIdentitySecret($siteId);
-                }
-
-                return $value;
-            });
-        }
-
-        // Horizontal / Vertical padding
-        if ($field == 'horizontalPadding' || $field == 'verticalPadding') {
-            $value = (int)$value;
-        }
-
-        // Hide default launcher
-        if ($field == 'hideDefaultLauncher') {
-            if (!$this->getEnableCustomLauncher($siteId)) {
-                $value = false;
-            }
-
-            if (!$this->getEnableCustomLauncher($siteId) && !$this->getShowDefaultLauncherScrollBottomPageOnly($siteId)) {
-                $value = false;
-            }
-
-            if ($this->getShowDefaultLauncherScrollBottomPageOnly($siteId)) {
-                $value = true;
-            }
-        }
-
-        // --
-
-        return $value;
-    }
-
-    /**
-     * Get setting
-     * 
-     * @param string $setting
-     * @param int|null $siteId default
-     * @return mixed
-     */
-    private function _getSetting(string $setting, int $siteId = null)
-    {
-        if (empty($siteId)) {
-            $siteId = Craft::$app->getSites()->getCurrentSite()->id ?? null;
-        }
-
-        $configs = Craft::$app->getConfig()->getConfigFromFile(Plugin::$plugin->handle);
-        
-        if (isset($configs[$siteId][$setting])) {
-            return $configs[$siteId][$setting];
-        }
-
-        if (isset($configs[$setting])) {
-            return $configs[$setting];
-        }
-
-        return $this->$setting[$siteId] ?? '';
+        return $setting;
     }
 }

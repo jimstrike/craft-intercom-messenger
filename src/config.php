@@ -1,6 +1,6 @@
 <?php
 /**
- * Intercom Messenger plugin for Craft CMS 4.x
+ * Intercom Messenger plugin for Craft CMS 4.x|5.x
  *
  * Intercom.com: the Business Messenger you and your customers will love.
  * Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -173,6 +173,33 @@ return [
     'verticalPadding' => 20,
 
     /**
+     * Action color
+     * 
+     * Used in button links and more to highlight and emphasise. Default color is: #8f00b3
+     * 
+     * @var string
+     */
+    'actionColor' => '#8f00b3',
+
+    /**
+     * Background color
+     * 
+     * Used behind your team profile and other attributes. Default color is: #8f00b3
+     * 
+     * @var string
+     */
+    'backgroundColor' => '#8f00b3',
+
+    /**
+     * Use your own theme color?
+     * 
+     * Allows you to overwrite Intercom's color settings and set your own "Action color" and "Background color" above.
+     * 
+     * @var bool
+     */
+    'useOwnThemeColor' => false,
+
+    /**
      * Show standard launcher only when a user scrolls to the bottom of the page?
      * 
      * You'll need to have "Hide default launcher?" setting turned on so that 
@@ -209,6 +236,20 @@ return [
      * @var bool
      */
     'hideDefaultLauncher' => false,
+
+    /**
+     * API regional location
+     * 
+     * If you are using a data center hosted in one of the regional locations listed below, you will need to choose the associated API base. 
+     * Select the default value if in doubt or preview and test before enabling the plugin.
+     * 
+     * Available options are: 'default', 'us', 'eu', 'au'. 
+     * 
+     * A null or empty value will trigger 'default' option.
+     * 
+     * @var string
+     */ 
+    'apiRegionalLocation' => 'default'
 ];
 
 //** Multi-site settings */

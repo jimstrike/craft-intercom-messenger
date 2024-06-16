@@ -1,6 +1,6 @@
 <?php
 /**
- * Intercom Messenger plugin for Craft CMS 4.x
+ * Intercom Messenger plugin for Craft CMS 4.x|5.x
  *
  * Intercom.com: the Business Messenger you and your customers will love.
  * Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -81,12 +81,16 @@ return [
     'settings.alignment.label' => 'Alignment',
     'settings.horizontal_padding.label' => 'Horizontal padding',
     'settings.vertical_padding.label' => 'Vertical padding',
+    'settings.action_color.label' => 'Action color',
+    'settings.background_color.label' => 'Background color',
+    'settings.use_own_theme_color.label' => 'Use your own theme color',
     'settings.show_default_launcher_scroll_bottom_page_only.label' => 'Show standard launcher only when a user scrolls to the bottom of the page',
     'settings.enable_custom_launcher.label' => 'Enable custom launcher',
     'settings.hide_default_launcher.label' => 'Hide default launcher',
+    'settings.api_regional_location.label' => 'API regional location',
 
     // Settings instructions
-    'settings.app_id.instructions' => 'Workspace ID for your Intercom account. {intercom.help.find_app_id}',
+    'settings.app_id.instructions' => 'Workspace ID for your Intercom account',
     'settings.enabled.instructions' => 'Determines if the plugin should be enabled on your site. You can preview the plugin before enabling it.',
     'settings.setup_logged_in_user.instructions' => 'When you set up your Messenger for logged-in users, you know who your users are when they chat with you or use your product. This helps you support your customers and answer questions via live chat. Choose which user fields you want to send.',
     'settings.identity_secret.instructions' => 'Identity verification prevents third parties from impersonating your logged-in users and seeing their conversations. We strongly recommend that all Intercom customers enforce identity verification. Used in compination with "{user_hash}", "{user_id}" and/or "{email}" from "{setup_logged_in_user}" setting above. {enable_identity_verification}',
@@ -100,16 +104,23 @@ return [
     'settings.alignment.option.label.right' => 'Right',
     'settings.horizontal_padding.instructions' => 'You can set your horizontal padding to 20 or higher. The Messenger will revert to the default horizontal padding setting (20) on mobile.',
     'settings.vertical_padding.instructions' => 'You can set your vertical padding to 20 or higher. The Messenger will revert to the default vertical padding setting (20) on mobile.',
+    'settings.action_color.instructions' => 'Used in button links and more to highlight and emphasise. Default color is: {default_color}',
+    'settings.background_color.instructions' => 'Used behind your team profile and other attributes. Default color is: {default_color}',
+    'settings.use_own_theme_color.instructions' => 'Allows you to overwrite Intercom\'s color settings and set your own "{action_color}" and "{background_color}" above.',
     'settings.show_default_launcher_scroll_bottom_page_only.instructions' => 'You\'ll need to have "{hide_default_launcher}" setting turned on so that the launcher is hidden when the page loads initially.',
     'settings.enable_custom_launcher.instructions' => 'Before enabling this feature add the tag attribute {custom_launcher_selector} to the HTML element that you want the Messenger to open when clicked. Add as many custom launchers to your website as you wish.',
     'settings.hide_default_launcher.instructions' => 'You can choose to disable the standard launcher so that only your custom launcher appears. Before hiding the default launcher make sure you have set up a custom launcher in your HTML code.',
+    'settings.api_regional_location.instructions' => 'If you are using a data center hosted in one of the regional locations listed below, you will need to choose the associated API base. Select the default value if in doubt or preview and test before enabling the plugin.',
 
     // Settings placeholder
     'settings.identity_secret.placeholder' => 'Paste Intercom identity verification secret here...',
 
     // Settings footnotes
+    // 'settings.app_id.footnote' => 'To find your workspace ID sign in to your account and navigate to your workspace. Then check the URL in the address bar. It will look something like this: {logged_in_url_pattern}. The part of the URL where it says "{workspace_id}" will be your app or workspace ID.',
+    'settings.app_id.footnote' => 'You may see references to "Workspace ID" and "App ID". These are the same values. You can find this value in the URL when you are logged into Intercom. It will be a string of numbers and letters directly after {apps/}. So for {logged_in_url_pattern} the workspace ID is {workspace_id}.',
     'settings.setup_logged_in_user.footnote' => 'In order to enforce identity verification for logged-in users you must turn on "{user_hash}" together with "{user_id}" and/or "{email}". Admin users are excluded from this setup. When previewing in control panel or plugin\'s admin section, a fake logged-in user is generated. {enable_identity_verification}',
     'settings.identity_secret.footnote' => 'Verify your {user_id} hash or your {email} hash with Intercom\'s hash calculator. If they match then you are good to go, otherwise update identity verification secret above with the correct one.',
+    'settings.use_own_theme_color.footnote' => 'For a better user experience set "{action_color}" and "{background_color}" with the same value.',
     'settings.show_default_launcher_scroll_bottom_page_only.footnote' => 'If your pages are not scrollable then keep this feature turned off.',
     'settings.enable_custom_launcher.footnote' => 'Check out the examples on how to create a custom launcher for usage in templates. {documentation_url}',
     'settings.hide_default_launcher.footnote' => 'It works only if the custom launcher is enabled or the standard launcher is shown only when the user scrolls to the bottom of the page.',
@@ -172,4 +183,12 @@ return [
     'intercom.help.enable_identity_verification' => 'Enable identity verification',
     'intercom.help.enforce_identity_verification' => 'Enforce identity verification',
     'intercom.help.disable_standard_launcher' => 'Disable standard launcher',
+
+    // REGIONS
+    // =========================================================================
+
+    'region.name.default' => 'Default',
+    'region.name.us' => 'US',
+    'region.name.eu' => 'Europe',
+    'region.name.au' => 'Australia',
 ];

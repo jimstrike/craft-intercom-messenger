@@ -1,6 +1,6 @@
 <?php
 /**
- * Intercom Messenger plugin for Craft CMS 4.x
+ * Intercom Messenger plugin for Craft CMS 4.x|5.x
  *
  * Intercom.com: the Business Messenger you and your customers will love.
  * Sure, it does live chat. But there’s also bots, apps, product tours, and more
@@ -15,6 +15,7 @@ namespace jimstrike\intercommessenger\services;
 
 use Craft;
 use craft\base\Component;
+use craft\enums\CmsEdition;
 
 use jimstrike\intercommessenger\Plugin;
 use jimstrike\intercommessenger\models\Settings;
@@ -29,6 +30,8 @@ use jimstrike\intercommessenger\elements\FakeUser;
  */
 class Messenger extends Component
 {
+    use MessengerTrait;
+    
     /**
      * Custom launcher selector
      * 
@@ -129,13 +132,33 @@ class Messenger extends Component
             'hide_default_launcher' => $settings->getHideDefaultLauncher($siteId),
         ];
 
+        if ('default' !== $settings->getApiRegionalLocation($siteId)) {
+            $a = array_merge([
+                'api_base' => $this->getApiBaseUrl($settings->getApiRegionalLocation($siteId)),
+            ], $a);
+        }
+
         if ($settings->getEnableCustomLauncher($siteId)) {
             $a = array_merge($a, [
                 'custom_launcher_selector' => '[' . $this->customLauncherSelector() . ']',
             ]);
         }
 
-        if (Craft::$app->getEdition() !== Craft::Pro) {
+        if (true === $settings->getUseOwnThemeColor($siteId)) {
+            if ($settings->getActionColor($siteId)) {
+                $a = array_merge($a, [
+                    'action_color' => $settings->getActionColor($siteId),
+                ]);
+            }
+    
+            if ($settings->getBackgroundColor($siteId)) {
+                $a = array_merge($a, [
+                    'background_color' => $settings->getBackgroundColor($siteId),
+                ]);
+            }
+        }
+
+        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
             return $a;
         }
 
@@ -160,7 +183,7 @@ class Messenger extends Component
     {
         $a = [];
 
-        if (Craft::$app->getEdition() !== Craft::Pro) {
+        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
             return $a;
         }
 
@@ -245,7 +268,7 @@ class Messenger extends Component
      */
     private function _userBelongsToSetupUserGroups(int $siteId = null, Settings $settings = null, \craft\elements\User $user = null): bool
     {
-        if (Craft::$app->getEdition() !== Craft::Pro) {
+        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
             return false;
         }
 
@@ -270,7 +293,7 @@ class Messenger extends Component
             }
 
             if ($user->isInGroup($groupId)) {
-                return true; break;
+                return true;
             }
         }
 
@@ -284,10 +307,12 @@ class Messenger extends Component
      */
     private function _script(): string
     {
-        return "/** {COMMENT} */ "
-            . "window.intercomSettings = {YOUR_OBJECT};"
-            . "(function(){var w=window;var ic=w.Intercom;if(typeof ic==='function'){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/{YOUR_APP_ID}';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-        ";
+        $heredoc = <<<SCRIPT
+        window.intercomSettings = {YOUR_OBJECT};
+        (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/{YOUR_APP_ID}';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s, x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+        SCRIPT;
+
+        return $heredoc;
     }
 
     /**
@@ -297,6 +322,10 @@ class Messenger extends Component
      */
     private function _onscroll(): string
     {
-        return "var intercomMessengerPlugin={windowHeight:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,documentHeight:document.documentElement.scrollHeight};window.addEventListener('scroll',function(){intercomMessengerPlugin.windowScrollTop=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0;if(intercomMessengerPlugin.windowScrollTop+intercomMessengerPlugin.windowHeight>intercomMessengerPlugin.documentHeight-240){Intercom('update',{'hide_default_launcher':false})}else{Intercom('update',{'hide_default_launcher':true})}},false);";
+        $heredoc = <<<SCRIPT
+        var intercomMessengerPlugin={windowHeight:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight,documentHeight:document.documentElement.scrollHeight};window.addEventListener('scroll',function(){intercomMessengerPlugin.windowScrollTop=window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0;if(intercomMessengerPlugin.windowScrollTop+intercomMessengerPlugin.windowHeight>intercomMessengerPlugin.documentHeight-240){Intercom('update',{'hide_default_launcher':false})}else{Intercom('update',{'hide_default_launcher':true})}},false);
+        SCRIPT;
+
+        return $heredoc;
     }
 }
