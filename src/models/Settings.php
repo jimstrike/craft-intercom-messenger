@@ -15,6 +15,7 @@ namespace jimstrike\intercommessenger\models;
 
 use Craft;
 use craft\base\Model;
+use craft\enums\CmsEdition;
 
 use jimstrike\intercommessenger\Plugin;
 use jimstrike\intercommessenger\helpers\PluginHelper;
@@ -80,7 +81,7 @@ class Settings extends Model
      */
     public function getSetupLoggedInUser(int $siteId = null): array
     {
-        if (Craft::$app->getEdition() != Craft::Pro) {
+        if (Craft::$app->getEdition() != CmsEdition::Pro) {
             return [];
         }
 
@@ -97,7 +98,7 @@ class Settings extends Model
      */
     public function getIdentitySecret(int $siteId = null): string
     {
-        if (Craft::$app->getEdition() != Craft::Pro) {
+        if (Craft::$app->getEdition() != CmsEdition::Pro) {
             return '';
         }
 
@@ -114,7 +115,7 @@ class Settings extends Model
      */
     public function getSetupUserGroups(int $siteId = null): array
     {
-        if (Craft::$app->getEdition() !== Craft::Pro) {
+        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
             return [];
         }
 
