@@ -351,6 +351,18 @@
     </div>
 </div>
 
+{# ------------------------------- #}
+
+{{ forms.selectField({
+    label: 'settings.api_regional_location.label'|tt,
+    instructions: 'settings.api_regional_location.instructions'|tt,
+    name: 'settings[apiRegionalLocation]',
+    value: settings.getApiRegionalLocation(site.id),
+    options: settings.apiRegionalLocationOptions(),
+    required: false,
+    warning: _self.configWarning('apiRegionalLocation', plugin.handle, site.id)|trim,
+}) }}
+
 <hr>
 
 {# ------------------------------- #}
@@ -446,3 +458,4 @@
         {{ false }}
     {%- endif -%}
 {%- endmacro %}
+    

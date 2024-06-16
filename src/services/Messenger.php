@@ -30,6 +30,8 @@ use jimstrike\intercommessenger\elements\FakeUser;
  */
 class Messenger extends Component
 {
+    use MessengerTrait;
+    
     /**
      * Custom launcher selector
      * 
@@ -123,7 +125,7 @@ class Messenger extends Component
         }
 
         $a = [
-            // 'api_base' => 'https://api-iam.intercom.io',
+            'api_base' => $this->getApiBaseUrl($settings->getApiRegionalLocation($siteId)),
             'app_id' => $settings->getAppId($siteId),
             'alignment' => $settings->getAlignment($siteId),
             'horizontal_padding' => $settings->getHorizontalPadding($siteId), 

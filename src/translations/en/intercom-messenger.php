@@ -84,6 +84,7 @@ return [
     'settings.show_default_launcher_scroll_bottom_page_only.label' => 'Show standard launcher only when a user scrolls to the bottom of the page',
     'settings.enable_custom_launcher.label' => 'Enable custom launcher',
     'settings.hide_default_launcher.label' => 'Hide default launcher',
+    'settings.api_regional_location.label' => 'API regional location',
 
     // Settings instructions
     'settings.app_id.instructions' => 'Workspace ID for your Intercom account. {intercom.help.find_app_id}',
@@ -103,6 +104,7 @@ return [
     'settings.show_default_launcher_scroll_bottom_page_only.instructions' => 'You\'ll need to have "{hide_default_launcher}" setting turned on so that the launcher is hidden when the page loads initially.',
     'settings.enable_custom_launcher.instructions' => 'Before enabling this feature add the tag attribute {custom_launcher_selector} to the HTML element that you want the Messenger to open when clicked. Add as many custom launchers to your website as you wish.',
     'settings.hide_default_launcher.instructions' => 'You can choose to disable the standard launcher so that only your custom launcher appears. Before hiding the default launcher make sure you have set up a custom launcher in your HTML code.',
+    'settings.api_regional_location.instructions' => 'Select the region which is closest to your data center.',
 
     // Settings placeholder
     'settings.identity_secret.placeholder' => 'Paste Intercom identity verification secret here...',
@@ -172,4 +174,11 @@ return [
     'intercom.help.enable_identity_verification' => 'Enable identity verification',
     'intercom.help.enforce_identity_verification' => 'Enforce identity verification',
     'intercom.help.disable_standard_launcher' => 'Disable standard launcher',
+
+    // REGIONS
+    // =========================================================================
+
+    'region.name.us' => 'US',
+    'region.name.eu' => 'Europe',
+    'region.name.au' => 'Australia',
 ];
