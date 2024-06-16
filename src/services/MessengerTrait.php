@@ -19,6 +19,7 @@ trait MessengerTrait
      * @var array $apiBaseRegions 
      */
     private $apiBaseRegions = [
+        'default' => ['name' => 'region.name.default', 'url' => 'https://api-iam.intercom.io'],
         'us' => ['name' => 'region.name.us', 'url' => 'https://api-iam.intercom.io'],
         'eu' => ['name' => 'region.name.eu', 'url' => 'https://api-iam.eu.intercom.io'],
         'au' => ['name' => 'region.name.au', 'url' => 'https://api-iam.au.intercom.io'],
@@ -53,7 +54,7 @@ trait MessengerTrait
     {
         $keys = array_keys($this->apiBaseRegions);
 
-        return $keys[0] ?? 'us';
+        return isset($this->apiBaseRegions['default']) ? 'default' : $keys[0];
     }
 
     /**
@@ -63,13 +64,13 @@ trait MessengerTrait
      * 
      * @return array 
      */
-    public function getApiBaseRegion(string $region = 'us'): array
+    public function getApiBaseRegion(string $region = 'default'): array
     {
         if (!\in_array($region, $this->getApiBaseRegionsKeys())) {
             $region = $this->getApiDefaultBaseRegionKey();
         }
 
-        return $this->apiBaseRegions[$region] ?? $this->apiBaseRegions['us'];
+        return $this->apiBaseRegions[$region] ?? $this->apiBaseRegions['default'];
     }
 
     /**
@@ -79,7 +80,7 @@ trait MessengerTrait
      * 
      * @return string 
      */
-    public function getApiBaseUrl(string $region = 'us'): string
+    public function getApiBaseUrl(string $region = 'default'): string
     {
         $api = $this->getApiBaseRegion($region);
 

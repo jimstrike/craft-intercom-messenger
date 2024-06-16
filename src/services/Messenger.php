@@ -125,13 +125,18 @@ class Messenger extends Component
         }
 
         $a = [
-            'api_base' => $this->getApiBaseUrl($settings->getApiRegionalLocation($siteId)),
             'app_id' => $settings->getAppId($siteId),
             'alignment' => $settings->getAlignment($siteId),
             'horizontal_padding' => $settings->getHorizontalPadding($siteId), 
             'vertical_padding' => $settings->getVerticalPadding($siteId),
             'hide_default_launcher' => $settings->getHideDefaultLauncher($siteId),
         ];
+
+        if ('default' !== $settings->getApiRegionalLocation($siteId)) {
+            $a = array_merge([
+                'api_base' => $this->getApiBaseUrl($settings->getApiRegionalLocation($siteId)),
+            ], $a);
+        }
 
         if ($settings->getEnableCustomLauncher($siteId)) {
             $a = array_merge($a, [

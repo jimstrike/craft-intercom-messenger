@@ -104,7 +104,7 @@ return [
     'settings.show_default_launcher_scroll_bottom_page_only.instructions' => 'You\'ll need to have "{hide_default_launcher}" setting turned on so that the launcher is hidden when the page loads initially.',
     'settings.enable_custom_launcher.instructions' => 'Before enabling this feature add the tag attribute {custom_launcher_selector} to the HTML element that you want the Messenger to open when clicked. Add as many custom launchers to your website as you wish.',
     'settings.hide_default_launcher.instructions' => 'You can choose to disable the standard launcher so that only your custom launcher appears. Before hiding the default launcher make sure you have set up a custom launcher in your HTML code.',
-    'settings.api_regional_location.instructions' => 'Select the region which is closest to your data center.',
+    'settings.api_regional_location.instructions' => 'If you are using a data center hosted in one of the regional locations listed below, you will need to choose the associated API base. Select the default value if in doubt or preview and test before enabling the plugin.',
 
     // Settings placeholder
     'settings.identity_secret.placeholder' => 'Paste Intercom identity verification secret here...',
@@ -179,6 +179,7 @@ return [
     // REGIONS
     // =========================================================================
 
+    'region.name.default' => 'Default',
     'region.name.us' => 'US',
     'region.name.eu' => 'Europe',
     'region.name.au' => 'Australia',
