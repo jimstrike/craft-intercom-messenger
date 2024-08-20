@@ -52,7 +52,7 @@ class Plugin extends \craft\base\Plugin
      * @inheritdoc
      * @var string
      */
-    public string $schemaVersion = '2.1.0';
+    public string $schemaVersion = '2.1.1';
 
     /**
      * @inheritdoc
@@ -178,7 +178,7 @@ class Plugin extends \craft\base\Plugin
     {
         $nsPrefix = self::assetsNsPrefix();
 
-        return Craft::$app->assetManager->getPublishedUrl($nsPrefix, false);
+        return Craft::$app->assetManager->getPublishedUrl($nsPrefix);
     }
 
     /**
@@ -222,6 +222,22 @@ class Plugin extends \craft\base\Plugin
         catch (\Exception $e) {
             return [];
         }
+    }
+
+    /**
+     * Check if pro edition
+     * 
+     * @return bool
+     */
+    public static function isProEdition(): bool
+    {
+        // $proEdition = \class_exists('\craft\enums\CmsEdition')
+        $proEdition = \version_compare(Craft::$app->getInfo()->version, '5.0.0', '>=') 
+            ? \craft\enums\CmsEdition::fromHandle('pro')->value 
+            : Craft::Pro
+        ;
+        
+        return Craft::$app->getEdition() === $proEdition;
     }
 
     // Private methods

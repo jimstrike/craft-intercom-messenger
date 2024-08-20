@@ -1,5 +1,11 @@
 # Release Notes for "Intercom Messenger" plugin
 
+## 2.1.1 - 2024-08-20
+
+### Updated
+
+- Added compatibility (edition) checks for Craft 4.
+
 ## 2.1.0 - 2024-06-16
 
 ### Added

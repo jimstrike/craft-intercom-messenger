@@ -15,7 +15,6 @@ namespace jimstrike\intercommessenger\services;
 
 use Craft;
 use craft\base\Component;
-use craft\enums\CmsEdition;
 
 use jimstrike\intercommessenger\Plugin;
 use jimstrike\intercommessenger\models\Settings;
@@ -158,7 +157,7 @@ class Messenger extends Component
             }
         }
 
-        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
+        if (!Plugin::isProEdition()) {
             return $a;
         }
 
@@ -183,7 +182,7 @@ class Messenger extends Component
     {
         $a = [];
 
-        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
+        if (!Plugin::isProEdition()) {
             return $a;
         }
 
@@ -268,7 +267,7 @@ class Messenger extends Component
      */
     private function _userBelongsToSetupUserGroups(int $siteId = null, Settings $settings = null, \craft\elements\User $user = null): bool
     {
-        if (Craft::$app->getEdition() !== CmsEdition::Pro) {
+        if (!Plugin::isProEdition()) {
             return false;
         }
 
