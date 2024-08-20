@@ -231,8 +231,7 @@ class Plugin extends \craft\base\Plugin
      */
     public static function isProEdition(): bool
     {
-        // $proEdition = \class_exists('\craft\enums\CmsEdition')
-        $proEdition = \version_compare(Craft::$app->getInfo()->version, '5.0.0', '>=') 
+        $proEdition = \version_compare(Craft::$app->getInfo()->version, '5.0.0', '>=') && \class_exists('\craft\enums\CmsEdition')
             ? \craft\enums\CmsEdition::fromHandle('pro')->value 
             : Craft::Pro
         ;
